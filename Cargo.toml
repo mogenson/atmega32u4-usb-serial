@@ -1,0 +1,30 @@
+[package]
+name = "atmega32u4-usb-serial"
+version = "0.1.0"
+authors = ["Michael Mogenson <michael.mogenson@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+arduino-leonardo = { git = "https://github.com/Rahix/avr-hal" }
+avr-device = "0.2.2"
+embedded-hal = "0.2.4"
+nb = "1.0.0"
+ufmt = "0.1.0"
+
+[build-dependencies]
+cc = "1.0.60"
+
+[dev-dependencies]
+panic-halt = "0.2.0"
+
+[profile.dev]
+panic = "abort"
+lto = true
+opt-level = "s"
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+debug = true
+lto = true
+opt-level = "s"
