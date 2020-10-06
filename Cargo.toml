@@ -4,8 +4,11 @@ version = "0.1.0"
 authors = ["Michael Mogenson <michael.mogenson@gmail.com>"]
 edition = "2018"
 
+[features]
+default = ["rt"]
+rt = ["avr-device/rt"]
+
 [dependencies]
-arduino-leonardo = { git = "https://github.com/Rahix/avr-hal" }
 avr-device = "0.2.2"
 embedded-hal = "0.2.4"
 nb = "1.0.0"
@@ -16,6 +19,7 @@ cc = "1.0.60"
 
 [dev-dependencies]
 panic-halt = "0.2.0"
+arduino-leonardo = { git = "https://github.com/Rahix/avr-hal" }
 
 [profile.dev]
 panic = "abort"
