@@ -120,12 +120,55 @@ impl ufmt::uWrite for UsbSerial {
     }
 }
 
-#[avr_device::interrupt(atmega32u4)]
-unsafe fn USB_GEN() {
-    avr_device::interrupt::free(|_| usb_gen_handler());
-}
+/// Handlers for the `USB_GEN` and `USB_COM` interrupts.
+///
+/// When the `rt` feature is enabled (which it is by default), this crate defines ISRs for
+/// `USB_GEN` and `USB_COM` which are necessary for proper operation.  This will also pull in
+/// `avr-device/rt`.
+///
+/// If you need to define these ISRs yourself, you can disable the `rt` feature.  You then need to
+/// manually call [`isr::usb_gen`] and [`isr::usb_com`] in your implementation.  For example:
+///
+/// ```no_run
+/// mod usb_isr {
+///     use atmega32u4_usb_serial::isr;
+///
+///     #[avr_device::interrupt(atmega32u4)]
+///     unsafe fn USB_GEN() {
+///         isr::usb_gen()
+///     }
+///
+///     #[avr_device::interrupt(atmega32u4)]
+///     unsafe fn USB_COM() {
+///         isr::usb_com()
+///     }
+/// }
+/// ```
+pub mod isr {
+    use super::*;
 
-#[avr_device::interrupt(atmega32u4)]
-unsafe fn USB_COM() {
-    avr_device::interrupt::free(|_| usb_com_handler());
+    /// ISR implementation for the `USB_GEN` interrupt.
+    #[inline(always)]
+    pub unsafe fn usb_gen() {
+        avr_device::interrupt::free(|_| usb_gen_handler());
+    }
+
+    /// ISR implementation for the `USB_COM` interrupt.
+    #[inline(always)]
+    pub unsafe fn usb_com() {
+        avr_device::interrupt::free(|_| usb_com_handler());
+    }
+
+    #[cfg(feature = "rt")]
+    mod rt {
+        #[avr_device::interrupt(atmega32u4)]
+        unsafe fn USB_GEN() {
+            super::usb_gen()
+        }
+
+        #[avr_device::interrupt(atmega32u4)]
+        unsafe fn USB_COM() {
+            super::usb_com()
+        }
+    }
 }

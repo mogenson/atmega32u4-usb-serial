@@ -4,6 +4,10 @@ version = "0.1.0"
 authors = ["Michael Mogenson <michael.mogenson@gmail.com>"]
 edition = "2018"
 
+[features]
+default = ["rt"]
+rt = ["avr-device/rt"]
+
 [dependencies]
 avr-device = "0.2.2"
 embedded-hal = "0.2.4"
