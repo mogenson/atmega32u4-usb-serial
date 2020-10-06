@@ -2,7 +2,7 @@
 #![feature(abi_avr_interrupt)]
 #![allow(dead_code)]
 
-use arduino_leonardo::atmega32u4::{PLL, USB_DEVICE};
+use avr_device::atmega32u4::{PLL, USB_DEVICE};
 
 extern "C" {
     /* general */
